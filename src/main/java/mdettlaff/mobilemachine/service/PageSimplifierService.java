@@ -40,8 +40,8 @@ public class PageSimplifierService {
 	SimplifiedWebpage createSimplifiedWebpage(String url) throws ClientProtocolException, IOException {
 		String html = httpService.download(url);
 		String body = extractBody(html);
-		String htmlWithUrsReplaced = replaceUrls(body);
-		List<String> atoms = splitIntoAtoms(htmlWithUrsReplaced);
+		String htmlWithUrlsReplaced = replaceUrls(body);
+		List<String> atoms = splitIntoAtoms(htmlWithUrlsReplaced);
 		List<String> pages = splitIntoPages(atoms);
 		String title = extractTitle(html);
 		return new SimplifiedWebpage(title, pages);
