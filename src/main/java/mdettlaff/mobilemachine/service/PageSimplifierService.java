@@ -19,15 +19,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class PageSimplifierService {
 
-	private static final int MAX_PAGE_SIZE_IN_BYTES = 18000;
-
 	private final WebpageRepository repository;
 	private final HttpService httpService;
+	private final int maxPageSizeInBytes;
 
 	@Autowired
-	public PageSimplifierService(WebpageRepository repository, HttpService httpService) {
+	public PageSimplifierService(WebpageRepository repository, HttpService httpService, int maxPageSizeInBytes) {
 		this.repository = repository;
 		this.httpService = httpService;
+		this.maxPageSizeInBytes = maxPageSizeInBytes;
 	}
 
 	public SimplifiedWebpage simplify(String url) throws ClientProtocolException, IOException {
@@ -91,7 +91,7 @@ public class PageSimplifierService {
 		List<String> pages = new ArrayList<String>();
 		StringBuilder currentPage = new StringBuilder();
 		for (String atom : atoms) {
-			if (currentPage.length() + atom.length() <= MAX_PAGE_SIZE_IN_BYTES) {
+			if (currentPage.length() + atom.length() <= maxPageSizeInBytes) {
 				currentPage.append(atom);
 			} else {
 				addNonEmptyPage(pages, currentPage);

@@ -28,7 +28,7 @@ public class PageSimplifierServiceTest {
 	public void setUp() throws IOException {
 		repository = mock(WebpageRepository.class);
 		httpService = mock(HttpService.class);
-		service = new PageSimplifierService(repository, httpService);
+		service = new PageSimplifierService(repository, httpService, 18000);
 		webpageContent = IOUtils.toString(getClass().getResourceAsStream("DungeonKeeper.html"));
 	}
 
