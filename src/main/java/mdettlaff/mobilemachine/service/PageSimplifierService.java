@@ -37,9 +37,15 @@ public class PageSimplifierService {
 	private SimplifiedWebpage simplify(String url) throws ClientProtocolException, IOException {
 		// TODO uncomment
 		String content = null;//httpService.download(url);
+		content = replaceUrls(content);
 		List<String> atoms = splitIntoAtoms(content);
 		List<String> pages = splitIntoPages(atoms);
 		return new SimplifiedWebpage(pages);
+	}
+
+	private String replaceUrls(String content) {
+		// TODO implement
+		return null;
 	}
 
 	private List<String> splitIntoPages(List<String> atoms) {

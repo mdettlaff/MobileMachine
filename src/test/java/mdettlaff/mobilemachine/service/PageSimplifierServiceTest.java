@@ -22,7 +22,7 @@ public class PageSimplifierServiceTest {
 	}
 
 	@Test
-	public void testDownloadComics() throws Exception {
+	public void testSimplify() throws Exception {
 		String url = "http://tvtropes.org";
 		// Test
 		String result = service.simplify(url, 0);
