@@ -7,7 +7,7 @@
 	</head>
 	<body>
 		<c:url value="/simplified" var="sampleUrl">
-			<c:param name="url" value="http://www.hello.com" />
+			<c:param name="url" value="http://tvtropes.org/pmwiki/pmwiki.php/VideoGame/DungeonKeeper" />
 			<c:param name="page" value="0" />
 		</c:url>
 		<a href="${sampleUrl}">Test page</a>

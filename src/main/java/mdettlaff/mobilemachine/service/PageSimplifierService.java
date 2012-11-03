@@ -2,20 +2,22 @@ package mdettlaff.mobilemachine.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import mdettlaff.mobilemachine.domain.SimplifiedWebpage;
 import mdettlaff.mobilemachine.repository.WebpageRepository;
 
 import org.apache.http.client.ClientProtocolException;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PageSimplifierService {
 
-	private static final int MAX_PAGE_SIZE_IN_BYTES = 10000;
+	private static final int MAX_PAGE_SIZE_IN_BYTES = 18000;
 
 	private final WebpageRepository repository;
 	private final HttpService httpService;
@@ -35,17 +37,24 @@ public class PageSimplifierService {
 	}
 
 	private SimplifiedWebpage simplify(String url) throws ClientProtocolException, IOException {
-		// TODO uncomment
-		String content = null;//httpService.download(url);
-		content = replaceUrls(content);
-		List<String> atoms = splitIntoAtoms(content);
+		String html = httpService.download(url);
+		String body = extractBody(html);
+		String htmlWithUrsReplaced = replaceUrls(body);
+		List<String> atoms = splitIntoAtoms(htmlWithUrsReplaced);
 		List<String> pages = splitIntoPages(atoms);
 		return new SimplifiedWebpage(pages);
 	}
 
-	private String replaceUrls(String content) {
-		// TODO implement
-		return null;
+	private String replaceUrls(String html) {
+		return html.replaceAll(
+				"href=\"(http://tvtropes.org/pmwiki/.*?)\"",
+				"href=\"/simplified?url=$1&page=0\"");
+	}
+
+	private String extractBody(String html) {
+		Document document = Jsoup.parse(html);
+		Elements body = document.select("#wikitext");
+		return body.html();
 	}
 
 	private List<String> splitIntoPages(List<String> atoms) {
@@ -55,18 +64,41 @@ public class PageSimplifierService {
 			if (currentPage.length() + atom.length() <= MAX_PAGE_SIZE_IN_BYTES) {
 				currentPage.append(atom);
 			} else {
-				pages.add(currentPage.toString());
+				addNonEmptyPage(pages, currentPage);
 				currentPage = new StringBuilder(atom);
 			}
 		}
-		if (currentPage.length() > 0) {
-			pages.add(currentPage.toString());
-		}
+		addNonEmptyPage(pages, currentPage);
 		return pages;
 	}
 
-	private List<String> splitIntoAtoms(String content) {
-		// TODO implement
-		return Arrays.asList("Hejka, <b>Zbyszek</b>");
+	private void addNonEmptyPage(List<String> pages, StringBuilder currentPage) {
+		if (currentPage.length() > 0) {
+			pages.add(formatHtml(currentPage.toString()));
+		}
+	}
+
+	private String formatHtml(String html) {
+		// TODO improve, this is ugly
+		return html.replace(">", ">\n");
+	}
+
+	private List<String> splitIntoAtoms(String html) {
+		String oneLineHtml = html.replaceAll("\\n", "");
+		String[] atomsWithoutSeparators = oneLineHtml.split("</li>\\s+<li>");
+		List<String> atoms = new ArrayList<String>();
+		for (int i = 0; i < atomsWithoutSeparators.length; i++) {
+			String atomWithoutSeparator = atomsWithoutSeparators[i];
+			StringBuilder atom = new StringBuilder();
+			if (i != 0) {
+				atom.append("<li>");
+			}
+			atom.append(atomWithoutSeparator);
+			if (i != atomsWithoutSeparators.length - 1) {
+				atom.append("</li>");
+			}
+			atoms.add(atom.toString());
+		}
+		return atoms;
 	}
 }
