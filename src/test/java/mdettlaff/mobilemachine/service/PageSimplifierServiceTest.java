@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 
+import mdettlaff.mobilemachine.domain.SimplifiedWebpage;
 import mdettlaff.mobilemachine.repository.WebpageRepository;
 
 import org.apache.commons.io.IOUtils;
@@ -32,35 +33,38 @@ public class PageSimplifierServiceTest {
 	}
 
 	@Test
-	public void testSimplify_FirstPage() throws Exception {
+	public void testCreateSimplifiedWebpage_FirstPage() throws Exception {
 		// Mock
 		when(httpService.download(URL)).thenReturn(webpageContent);
 		// Run
-		String result = service.simplify(URL, 0);
+		SimplifiedWebpage result = service.createSimplifiedWebpage(URL);
 		// Verify
 		String expected = IOUtils.toString(getClass().getResourceAsStream("expected1.html"));
-		assertEquals(expected, result);
+		assertEquals("Dungeon Keeper - Television Tropes &amp; Idioms  ", result.getTitle());
+		assertEquals(expected, result.getPage(0));
 	}
 
 	@Test
-	public void testSimplify_MiddlePage() throws Exception {
+	public void testCreateSimplifiedWebpage_MiddlePage() throws Exception {
 		// Mock
 		when(httpService.download(URL)).thenReturn(webpageContent);
 		// Run
-		String result = service.simplify(URL, 1);
+		SimplifiedWebpage result = service.createSimplifiedWebpage(URL);
 		// Verify
 		String expected = IOUtils.toString(getClass().getResourceAsStream("expected2.html"));
-		assertEquals(expected, result);
+		assertEquals("Dungeon Keeper - Television Tropes &amp; Idioms  ", result.getTitle());
+		assertEquals(expected, result.getPage(1));
 	}
 
 	@Test
-	public void testSimplify_LastPage() throws Exception {
+	public void testCreateSimplifiedWebpage_LastPage() throws Exception {
 		// Mock
 		when(httpService.download(URL)).thenReturn(webpageContent);
 		// Run
-		String result = service.simplify(URL, 2);
+		SimplifiedWebpage result = service.createSimplifiedWebpage(URL);
 		// Verify
 		String expected = IOUtils.toString(getClass().getResourceAsStream("expected3.html"));
-		assertEquals(expected, result);
+		assertEquals("Dungeon Keeper - Television Tropes &amp; Idioms  ", result.getTitle());
+		assertEquals(expected, result.getPage(2));
 	}
 }

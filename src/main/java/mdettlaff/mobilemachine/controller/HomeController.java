@@ -1,7 +1,10 @@
 package mdettlaff.mobilemachine.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
+import mdettlaff.mobilemachine.domain.SimplifiedWebpage;
 import mdettlaff.mobilemachine.service.PageSimplifierService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +30,12 @@ public class HomeController {
 
 	@RequestMapping("/simplified")
 	public ModelAndView simplified(@RequestParam String url, @RequestParam int page) throws IOException {
-		String html = service.simplify(url, page);
-		return new ModelAndView("simplified", "html", html);
+		SimplifiedWebpage webpage = service.simplify(url);
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("title", webpage.getTitle());
+		model.put("html", webpage.getPage(page));
+		model.put("nextPage", page == webpage.getPageCount() - 1 ? null : page + 1);
+		model.put("url", url);
+		return new ModelAndView("simplified", model);
 	}
 }

@@ -15,4 +15,8 @@ public class WebpageRepository {
 	public SimplifiedWebpage getByUrl(String url) {
 		return webpages.get(url);
 	}
+
+	public void put(String url, SimplifiedWebpage webpage) {
+		webpages.put(url, webpage);
+	}
 }
