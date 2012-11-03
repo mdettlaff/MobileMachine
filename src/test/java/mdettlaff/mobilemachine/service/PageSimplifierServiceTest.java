@@ -16,55 +16,36 @@ import org.junit.Test;
 public class PageSimplifierServiceTest {
 
 	private static final String URL = "http://tvtropes.org/pmwiki/pmwiki.php/VideoGame/DungeonKeeper";
+	private static final int MAX_PAGE_SIZE_IN_BYTES = 18000;
 
 	private PageSimplifierService service;
 
 	private WebpageRepository repository;
 	private HttpService httpService;
 
-	private String webpageContent;
-
 	@Before
 	public void setUp() throws IOException {
 		repository = mock(WebpageRepository.class);
 		httpService = mock(HttpService.class);
-		service = new PageSimplifierService(repository, httpService, 18000);
-		webpageContent = IOUtils.toString(getClass().getResourceAsStream("DungeonKeeper.html"));
+		service = new PageSimplifierService(repository, httpService, MAX_PAGE_SIZE_IN_BYTES);
 	}
 
 	@Test
-	public void testCreateSimplifiedWebpage_FirstPage() throws Exception {
+	public void testCreateSimplifiedWebpage() throws Exception {
+		// Prepare
+		String webpageContent = IOUtils.toString(getClass().getResourceAsStream("DungeonKeeper.html"));
 		// Mock
 		when(httpService.download(URL)).thenReturn(webpageContent);
 		// Run
 		SimplifiedWebpage result = service.createSimplifiedWebpage(URL);
 		// Verify
-		String expected = IOUtils.toString(getClass().getResourceAsStream("expected1.html"));
 		assertEquals("Dungeon Keeper - Television Tropes &amp; Idioms  ", result.getTitle());
-		assertEquals(expected, result.getPage(0));
-	}
-
-	@Test
-	public void testCreateSimplifiedWebpage_MiddlePage() throws Exception {
-		// Mock
-		when(httpService.download(URL)).thenReturn(webpageContent);
-		// Run
-		SimplifiedWebpage result = service.createSimplifiedWebpage(URL);
-		// Verify
-		String expected = IOUtils.toString(getClass().getResourceAsStream("expected2.html"));
-		assertEquals("Dungeon Keeper - Television Tropes &amp; Idioms  ", result.getTitle());
-		assertEquals(expected, result.getPage(1));
-	}
-
-	@Test
-	public void testCreateSimplifiedWebpage_LastPage() throws Exception {
-		// Mock
-		when(httpService.download(URL)).thenReturn(webpageContent);
-		// Run
-		SimplifiedWebpage result = service.createSimplifiedWebpage(URL);
-		// Verify
-		String expected = IOUtils.toString(getClass().getResourceAsStream("expected3.html"));
-		assertEquals("Dungeon Keeper - Television Tropes &amp; Idioms  ", result.getTitle());
-		assertEquals(expected, result.getPage(2));
+		assertEquals(3, result.getPageCount());
+		String expected1 = IOUtils.toString(getClass().getResourceAsStream("expected1.html"));
+		assertEquals(expected1, result.getPage(0));
+		String expected2 = IOUtils.toString(getClass().getResourceAsStream("expected2.html"));
+		assertEquals(expected2, result.getPage(1));
+		String expected3 = IOUtils.toString(getClass().getResourceAsStream("expected3.html"));
+		assertEquals(expected3, result.getPage(2));
 	}
 }
