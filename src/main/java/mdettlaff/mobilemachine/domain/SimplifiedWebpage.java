@@ -18,7 +18,7 @@ public class SimplifiedWebpage {
 	}
 
 	public String getPage(int pageNumber) {
-		return pages.get(pageNumber);
+		return pages.get(pageNumber - 1);
 	}
 
 	public int getPageCount() {

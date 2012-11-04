@@ -29,12 +29,13 @@ public class HomeController {
 	}
 
 	@RequestMapping("/simplified")
-	public ModelAndView simplified(@RequestParam String url, @RequestParam int page) throws IOException {
+	public ModelAndView simplified(@RequestParam String url,
+			@RequestParam(required = false, defaultValue = "1") int page) throws IOException {
 		SimplifiedWebpage webpage = service.simplify(url);
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("title", webpage.getTitle());
 		model.put("html", webpage.getPage(page));
-		model.put("nextPage", page == webpage.getPageCount() - 1 ? null : page + 1);
+		model.put("nextPage", page == webpage.getPageCount() ? null : page + 1);
 		model.put("url", url);
 		return new ModelAndView("simplified", model);
 	}

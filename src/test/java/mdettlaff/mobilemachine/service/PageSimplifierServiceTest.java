@@ -42,10 +42,10 @@ public class PageSimplifierServiceTest {
 		assertEquals("Dungeon Keeper - Television Tropes &amp; Idioms  ", result.getTitle());
 		assertEquals(3, result.getPageCount());
 		String expected1 = IOUtils.toString(getClass().getResourceAsStream("expected1.html"));
-		assertEquals(expected1, result.getPage(0));
+		assertEquals(expected1, result.getPage(1));
 		String expected2 = IOUtils.toString(getClass().getResourceAsStream("expected2.html"));
-		assertEquals(expected2, result.getPage(1));
+		assertEquals(expected2, result.getPage(2));
 		String expected3 = IOUtils.toString(getClass().getResourceAsStream("expected3.html"));
-		assertEquals(expected3, result.getPage(2));
+		assertEquals(expected3, result.getPage(3));
 	}
 }

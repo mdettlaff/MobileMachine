@@ -67,7 +67,7 @@ public class PageSimplifierService {
 	private String replaceUrls(String html) {
 		return html.replaceAll(
 				"href=\"(http://tvtropes.org/pmwiki/.*?)\"",
-				"href=\"/simplified?url=$1&page=0\"");
+				"href=\"/simplified?url=$1\"");
 	}
 
 	private List<String> splitIntoAtoms(String html) {

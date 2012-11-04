@@ -5,8 +5,8 @@
 	</head>
 	<body>
 		<form action="/simplified" method="get">
-			URL: <input name="url" value="http://tvtropes.org/pmwiki/pmwiki.php/VideoGame/DungeonKeeper" size="64">
-			<input type="hidden" name="page" value="0">
+			URL:
+			<input name="url" value="http://tvtropes.org/pmwiki/pmwiki.php/VideoGame/DungeonKeeper" size="64">
 			<div>
 				<input type="submit" value="See mobile version">
 			</div>
