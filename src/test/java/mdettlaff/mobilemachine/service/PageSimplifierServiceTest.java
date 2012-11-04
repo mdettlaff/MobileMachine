@@ -16,7 +16,7 @@ import org.junit.Test;
 public class PageSimplifierServiceTest {
 
 	private static final String URL = "http://tvtropes.org/pmwiki/pmwiki.php/VideoGame/DungeonKeeper";
-	private static final int MAX_PAGE_SIZE_IN_BYTES = 18000;
+	private static final int MAX_PAGE_SIZE_IN_BYTES = 20000;
 
 	private PageSimplifierService service;
 

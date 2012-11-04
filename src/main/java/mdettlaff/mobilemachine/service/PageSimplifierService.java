@@ -58,8 +58,10 @@ public class PageSimplifierService {
 
 	private String extractBody(String html) {
 		Document document = Jsoup.parse(html);
+		Elements header = document.select("#wikititle");
 		Elements body = document.select("#wikitext");
-		return body.html();
+		String headerHtml = header.html().replace(" style=\"text-align:right;\"", "");
+		return headerHtml + "\n" + body.html();
 	}
 
 	private String replaceUrls(String html) {
@@ -110,6 +112,6 @@ public class PageSimplifierService {
 
 	private String formatHtml(String html) {
 		// TODO improve, this is ugly
-		return html.replace(">", ">\n");
+		return html.replace("</li>", "</li>\n");
 	}
 }
