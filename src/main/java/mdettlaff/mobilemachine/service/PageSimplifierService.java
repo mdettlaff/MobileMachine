@@ -116,6 +116,7 @@ public class PageSimplifierService {
 	}
 
 	private String formatHtml(String html) {
-		return Jsoup.parse(html).body().children().toString();
+		// TODO improve, this is ugly
+		return html.replace("</li>", "</li>\n");
 	}
 }
