@@ -58,10 +58,15 @@ public class PageSimplifierService {
 
 	private String extractBody(String html) {
 		Document document = Jsoup.parse(html);
-		Elements header = document.select("#wikititle");
-		Elements body = document.select("#wikitext");
-		String headerHtml = header.html().replace(" style=\"text-align:right;\"", "");
-		return headerHtml + "\n" + body.html();
+		Elements wikiTitle = document.select("#wikititle");
+		Elements wikiText = document.select("#wikitext");
+		String wikiTitleHtml = wikiTitle.html().replace(" style=\"text-align:right;\"", "");
+		String wikiBody = wikiTitleHtml + "\n" + wikiText.html();
+		if (!wikiBody.trim().isEmpty()) {
+			return wikiBody;
+		} else {
+			return document.body().children().toString();
+		}
 	}
 
 	private String replaceUrls(String html) {
