@@ -11,15 +11,14 @@
 	<body>
 		${html}
 		<hr>
-<c:if test="${pageCount gt 1}">
-		Page ${currentPage} of ${pageCount}<br>
-</c:if>
 <c:if test="${not empty nextPage}">
 		<c:url value="/simplified" var="nextPageUrl">
 			<c:param name="url" value="${url}" />
 			<c:param name="page" value="${nextPage}" />
 		</c:url>
-		<a href="${nextPageUrl}">Next page</a><br>
+		<a href="${nextPageUrl}">
+			Next page (${nextPage} of ${pageCount})
+		</a><br>
 </c:if>
 		<a href="${url}">Original version of the page</a>
 	</body>

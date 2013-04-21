@@ -35,7 +35,6 @@ public class HomeController {
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("title", webpage.getTitle());
 		model.put("html", webpage.getPage(page));
-		model.put("currentPage", page);
 		model.put("nextPage", page == webpage.getPageCount() ? null : page + 1);
 		model.put("pageCount", webpage.getPageCount());
 		model.put("url", url);
