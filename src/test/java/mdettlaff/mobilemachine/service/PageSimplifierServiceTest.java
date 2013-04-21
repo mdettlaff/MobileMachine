@@ -41,11 +41,11 @@ public class PageSimplifierServiceTest {
 		// Verify
 		assertEquals("Dungeon Keeper - Television Tropes &amp; Idioms  ", result.getTitle());
 		assertEquals(3, result.getPageCount());
-		String expected1 = IOUtils.toString(getClass().getResourceAsStream("expected1.html"));
+		String expected1 = IOUtils.toString(getClass().getResourceAsStream("expected1.html"), "UTF-8");
 		assertEquals(expected1, result.getPage(1));
-		String expected2 = IOUtils.toString(getClass().getResourceAsStream("expected2.html"));
+		String expected2 = IOUtils.toString(getClass().getResourceAsStream("expected2.html"), "UTF-8");
 		assertEquals(expected2, result.getPage(2));
-		String expected3 = IOUtils.toString(getClass().getResourceAsStream("expected3.html"));
+		String expected3 = IOUtils.toString(getClass().getResourceAsStream("expected3.html"), "UTF-8");
 		assertEquals(expected3, result.getPage(3));
 	}
 }
