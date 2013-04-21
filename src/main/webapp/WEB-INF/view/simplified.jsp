@@ -9,6 +9,9 @@
 	<body>
 		${html}
 		<hr>
+<c:if test="${pageCount gt 1}">
+		Page ${currentPage} of ${pageCount}<br>
+</c:if>
 <c:if test="${not empty nextPage}">
 		<c:url value="/simplified" var="nextPageUrl">
 			<c:param name="url" value="${url}" />
