@@ -5,6 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.net.URI;
 
 import mdettlaff.mobilemachine.domain.SimplifiedWebpage;
 import mdettlaff.mobilemachine.repository.WebpageRepository;
@@ -12,6 +13,7 @@ import mdettlaff.mobilemachine.repository.WebpageRepository;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.web.client.RestTemplate;
 
 public class PageSimplifierServiceTest {
 
@@ -21,13 +23,13 @@ public class PageSimplifierServiceTest {
 	private PageSimplifierService service;
 
 	private WebpageRepository repository;
-	private HttpService httpService;
+	private RestTemplate restTemplate;
 
 	@Before
 	public void setUp() throws IOException {
 		repository = mock(WebpageRepository.class);
-		httpService = mock(HttpService.class);
-		service = new PageSimplifierService(repository, httpService, MAX_PAGE_SIZE_IN_BYTES);
+		restTemplate = mock(RestTemplate.class);
+		service = new PageSimplifierService(repository, restTemplate, MAX_PAGE_SIZE_IN_BYTES);
 	}
 
 	@Test
@@ -35,7 +37,7 @@ public class PageSimplifierServiceTest {
 		// Prepare
 		String webpageContent = IOUtils.toString(getClass().getResourceAsStream("DungeonKeeper.html"));
 		// Mock
-		when(httpService.download(URL)).thenReturn(webpageContent);
+		when(restTemplate.getForObject(new URI(URL), String.class)).thenReturn(webpageContent);
 		// Run
 		SimplifiedWebpage result = service.createSimplifiedWebpage(URL);
 		// Verify

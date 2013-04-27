@@ -1,6 +1,6 @@
 package mdettlaff.mobilemachine.controller;
 
-import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -30,7 +31,7 @@ public class HomeController {
 
 	@RequestMapping("/simplified")
 	public ModelAndView simplified(@RequestParam String url,
-			@RequestParam(required = false, defaultValue = "1") int page) throws IOException {
+			@RequestParam(required = false, defaultValue = "1") int page) throws RestClientException, URISyntaxException {
 		SimplifiedWebpage webpage = service.simplify(url);
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("title", webpage.getTitle());

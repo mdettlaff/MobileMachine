@@ -1,6 +1,7 @@
 package mdettlaff.mobilemachine.service;
 
-import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -9,36 +10,37 @@ import java.util.regex.Pattern;
 import mdettlaff.mobilemachine.domain.SimplifiedWebpage;
 import mdettlaff.mobilemachine.repository.WebpageRepository;
 
-import org.apache.http.client.ClientProtocolException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class PageSimplifierService {
 
 	private final WebpageRepository repository;
-	private final HttpService httpService;
+	private final RestTemplate restTemplate;
 	private final int maxPageSizeInBytes;
 
 	@Autowired
-	public PageSimplifierService(WebpageRepository repository, HttpService httpService, int maxPageSizeInBytes) {
+	public PageSimplifierService(WebpageRepository repository, RestTemplate restTemplate, int maxPageSizeInBytes) {
 		this.repository = repository;
-		this.httpService = httpService;
+		this.restTemplate = restTemplate;
 		this.maxPageSizeInBytes = maxPageSizeInBytes;
 	}
 
-	public SimplifiedWebpage simplify(String url) throws ClientProtocolException, IOException {
+	public SimplifiedWebpage simplify(String url) throws RestClientException, URISyntaxException {
 		if (repository.getByUrl(url) == null) {
 			repository.put(url, createSimplifiedWebpage(url));
 		}
 		return repository.getByUrl(url);
 	}
 
-	SimplifiedWebpage createSimplifiedWebpage(String url) throws ClientProtocolException, IOException {
-		String html = httpService.download(url);
+	SimplifiedWebpage createSimplifiedWebpage(String url) throws RestClientException, URISyntaxException {
+		String html = restTemplate.getForObject(new URI(url), String.class);
 		String body = extractBody(html);
 		String htmlWithUrlsReplaced = replaceUrls(body);
 		List<String> atoms = splitIntoAtoms(htmlWithUrlsReplaced);
