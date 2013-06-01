@@ -1,5 +1,6 @@
 package mdettlaff.mobilemachine.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +32,7 @@ public class HomeController {
 
 	@RequestMapping("/simplified")
 	public ModelAndView simplified(@RequestParam String url,
-			@RequestParam(required = false, defaultValue = "1") int page) throws RestClientException, URISyntaxException {
+			@RequestParam(required = false, defaultValue = "1") int page) throws RestClientException, URISyntaxException, UnsupportedEncodingException {
 		SimplifiedWebpage webpage = service.simplify(url);
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("title", webpage.getTitle());

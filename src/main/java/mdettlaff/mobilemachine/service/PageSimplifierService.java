@@ -1,7 +1,9 @@
 package mdettlaff.mobilemachine.service;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -32,14 +34,14 @@ public class PageSimplifierService {
 		this.maxPageSizeInBytes = maxPageSizeInBytes;
 	}
 
-	public SimplifiedWebpage simplify(String url) throws RestClientException, URISyntaxException {
+	public SimplifiedWebpage simplify(String url) throws RestClientException, URISyntaxException, UnsupportedEncodingException {
 		if (repository.getByUrl(url) == null) {
 			repository.put(url, createSimplifiedWebpage(url));
 		}
 		return repository.getByUrl(url);
 	}
 
-	SimplifiedWebpage createSimplifiedWebpage(String url) throws RestClientException, URISyntaxException {
+	SimplifiedWebpage createSimplifiedWebpage(String url) throws RestClientException, URISyntaxException, UnsupportedEncodingException {
 		String html = restTemplate.getForObject(new URI(url), String.class);
 		String body = extractBody(html);
 		String htmlWithUrlsReplaced = replaceUrls(body);
@@ -71,10 +73,17 @@ public class PageSimplifierService {
 		}
 	}
 
-	private String replaceUrls(String html) {
-		return html.replaceAll(
-				"href=\"(http://tvtropes.org/pmwiki/.*?)\"",
-				"href=\"/simplified?url=$1\"");
+	private String replaceUrls(String html) throws UnsupportedEncodingException {
+		Pattern pattern = Pattern.compile("href=\"(http://tvtropes.org/pmwiki/.*?)\"");
+		Matcher matcher = pattern.matcher(html);
+		StringBuffer result = new StringBuffer();
+		while (matcher.find()) {
+			String url = matcher.group(1);
+			url = URLEncoder.encode(url.replace("&amp;", "&"), "UTF-8");
+			matcher.appendReplacement(result, "href=\"/simplified?url=" + url + "\"");
+		}
+		matcher.appendTail(result);
+		return result.toString();
 	}
 
 	private List<String> splitIntoAtoms(String html) {
